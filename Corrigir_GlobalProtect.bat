@@ -1,10 +1,3 @@
-@echo off
-
-chcp 65001
-cls
-echo .....................................................
-echo .....................................................
-echo ...Script para resolver problemas no Global Protect...
 echo .........Criado por Gleriston Sampaio................
 echo .....................................................
 echo .....................................................
@@ -21,6 +14,7 @@ timeout 10 > NUL
 echo.
 echo Atualizando WindowsDefender...
 
+
 	"C:\Program Files\Windows Defender\MpCmdRun.exe" -SignatureUpdate
 
 echo Procurando ameaças no computador com WindowsDefender...
@@ -31,15 +25,25 @@ timeout 10 > NUL
 
 echo Atualizando Symantec Antivirus...
 
+if not exist "C:\Suporte\" mkdir C:\Suporte
+if exist "C:\Program Files (x86)\Symantec\Symantec Endpoint Protection\" goto :SYMANTEC
+if exist "C:\Program Files\AVG\Antivirus" goto :AVG
+
+:SYMANTEC
+if exist "C:\Program Files (x86)\Symantec\Symantec Endpoint Protection\" bitsadmin /transfer mydownloadjob  /download /priority normal http://10.6.0.30:8014/secars/HI/ATUALIZACAO_SEP.exe C:\Suporte\ATUALIZACAO_SEP.exe
+"C:\Suporte\ATUALIZACAO_SEP.exe" \s
 cd "C:\Program Files (x86)\Symantec\Symantec Endpoint Protection\"
 SepLiveUpdate.exe
 timeout 10 > NUL
 cd "C:\Program Files (x86)\Symantec\Symantec Endpoint Protection\"
 DoScan.exe /C
 
-
 timeout 30 > NUL
 
+:AVG
+
+cd "C:\Program Files\AVG\Antivirus"
+AVGUI.exe
 
 timeout 30 > NUL
  
@@ -61,15 +65,3 @@ Sleep, 1000
 :ERRO
 echo.
 echo.
-echo.
-echo Ver Global Protect.
-timeout 5
-echo.
-
- 
-
-goto END
-
- 
-
-:END
